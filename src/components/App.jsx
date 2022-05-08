@@ -55,7 +55,7 @@ export class App extends PureComponent {
   render() {
     const { handleSearch } = this;
     const {
-      searchQuery,
+      // searchQuery,
       photoList,
       totalNumberOfPhotos,
       isLoading,
@@ -84,7 +84,6 @@ export class App extends PureComponent {
             onClick={handlePagination}
           />
         )}
-        <Modal />
       </Section>
     );
   }
