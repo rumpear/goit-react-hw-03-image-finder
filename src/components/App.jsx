@@ -1,12 +1,14 @@
 import { PureComponent } from 'react';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import { Container } from './Container';
-import { Section } from './Section';
+
 import { Searchbar } from './Searchbar';
 import { ImageGallery } from './ImageGallery';
 import { Button } from './Button';
 import { fetchImages } from '../services/pixabayService';
-import { Modal } from './Modal';
+// import { Modal } from './Modal';
+import { Wrapper } from './App.styled';
 
 export class App extends PureComponent {
   state = {
@@ -29,6 +31,8 @@ export class App extends PureComponent {
   async componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
     // this.setState({ isLoading: true });
+
+    if (!searchQuery) return;
 
     if (prevState.searchQuery !== searchQuery || prevState.page !== page) {
       try {
@@ -55,7 +59,7 @@ export class App extends PureComponent {
   render() {
     const { handleSearch } = this;
     const {
-      // searchQuery,
+      searchQuery,
       photoList,
       totalNumberOfPhotos,
       isLoading,
@@ -68,11 +72,11 @@ export class App extends PureComponent {
 
     // console.log('handlePagination', handlePagination);
 
-    // console.log(searchQuery);
-    console.log(totalNumberOfPhotos);
+    console.log(searchQuery);
+    // console.log(totalNumberOfPhotos);
 
     return (
-      <Section>
+      <Wrapper>
         <Searchbar onSubmit={handleSearch} />
         {photoList.length > 0 && <ImageGallery photoList={photoList} />}
         {isLoading && <h1>212</h1>}
@@ -84,7 +88,19 @@ export class App extends PureComponent {
             onClick={handlePagination}
           />
         )}
-      </Section>
+        <ToastContainer
+          // limit={1}
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </Wrapper>
     );
   }
 }

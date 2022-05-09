@@ -1,6 +1,6 @@
 import { PureComponent } from 'react';
 import { Modal } from '../../Modal';
-
+import { Item, Image } from './ImageGallery.styled';
 export class ImageGalleryItem extends PureComponent {
   state = { showModal: false };
 
@@ -22,13 +22,12 @@ export class ImageGalleryItem extends PureComponent {
     return (
       <>
         {photoList.map(({ id, webformatURL, largeImageURL, tags }) => (
-          <li
+          <Item
             key={id}
-            class="gallery-item"
             onClick={() => this.handleShowModal(largeImageURL, tags)}
           >
-            <img src={webformatURL} alt={tags} />
-          </li>
+            <Image src={webformatURL} alt={tags} />
+          </Item>
         ))}
         {showModal && (
           <Modal onCloseModal={this.handleCloseModal}>

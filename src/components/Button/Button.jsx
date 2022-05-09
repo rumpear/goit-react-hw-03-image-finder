@@ -1,5 +1,7 @@
 import { PureComponent } from 'react';
 
+import { LoadMoreBtn } from './Button.styled';
+
 export class Button extends PureComponent {
   state = { page: 2 };
   incrementPage = () => {
@@ -9,9 +11,9 @@ export class Button extends PureComponent {
 
   render() {
     return (
-      <button type="button" onClick={this.incrementPage}>
+      <LoadMoreBtn type="button" onClick={this.incrementPage}>
         Load more
-      </button>
+      </LoadMoreBtn>
     );
   }
 }
