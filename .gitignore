@@ -108,3 +108,6 @@ src/img
 src/data
 src/js
 src/components/ContactsForm/ContactsFormFormik.jsx
+src/components/App copy.jsx
+src/components/ImageGallery/ImageGallery copy.jsx
+src/components/Button/Button copy.jsx
