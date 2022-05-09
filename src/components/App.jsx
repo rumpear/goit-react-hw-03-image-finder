@@ -1,13 +1,12 @@
 import { PureComponent } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import { Container } from './Container';
 
+import { fetchImages } from '../services/pixabayService';
 import { Searchbar } from './Searchbar';
 import { ImageGallery } from './ImageGallery';
 import { Button } from './Button';
-import { fetchImages } from '../services/pixabayService';
-// import { Modal } from './Modal';
+import { Loader } from './Loader';
 import { Wrapper } from './App.styled';
 
 export class App extends PureComponent {
@@ -25,12 +24,11 @@ export class App extends PureComponent {
   };
 
   handlePagination = page => {
-    this.setState({ page: page });
+    this.setState({ page });
   };
 
   async componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
-    // this.setState({ isLoading: true });
 
     if (!searchQuery) return;
 
@@ -38,11 +36,9 @@ export class App extends PureComponent {
       try {
         this.setState({ isLoading: true });
         const { totalHits, hits } = await fetchImages(searchQuery, page);
-        // this.setState({
-        //   photoList: hits,
-        //   totalNumberOfPhotos: totalHits,
-        //   // isLoading: false,
-        // });
+
+        if (hits.length === 0)
+          toast.warn(`We didn't find any photos matching your request`);
 
         this.setState(({ photoList }) => ({
           photoList: [...photoList, ...hits],
@@ -57,7 +53,7 @@ export class App extends PureComponent {
   }
 
   render() {
-    const { handleSearch } = this;
+    const { handleSearch, handlePagination } = this;
     const {
       searchQuery,
       photoList,
@@ -66,30 +62,39 @@ export class App extends PureComponent {
       error,
       page,
     } = this.state;
-    const { handlePagination } = this;
 
-    console.log('this.state', page);
+    const checkPages = () => {
+      const totalPages = Math.floor(totalNumberOfPhotos / 12);
+      return page < totalPages && photoList.length;
+    };
 
-    // console.log('handlePagination', handlePagination);
+    // const totalPages = Math.floor(totalNumberOfPhotos / 12);
 
-    console.log(searchQuery);
-    // console.log(totalNumberOfPhotos);
+    // console.log(error);
+    // console.log('this.page', page);
+    // console.log('totalPages', totalPages);
+    // console.log('page < totalPages', page < totalPages);
+    // console.log('totalNumberOfPhotos', totalNumberOfPhotos);
+    // console.log(searchQuery);
+    // console.log(photoList.length);
 
     return (
       <Wrapper>
         <Searchbar onSubmit={handleSearch} />
+        {error && <h1>Whoops, something went wrong: {error.message}</h1>}
         {photoList.length > 0 && <ImageGallery photoList={photoList} />}
-        {isLoading && <h1>212</h1>}
-        {error && <p>Whoops, something went wrong: {error.message}</p>}
-        {photoList.length > 11 && (
-          <Button
-            // photoList={photoList}
-            page={page}
-            onClick={handlePagination}
-          />
-        )}
+
+        {isLoading && <Loader />}
+
+        {checkPages() ? (
+          <Button page={page} onClick={handlePagination} />
+        ) : null}
+
+        {/* {page < totalPages && photoList.length >= 12 && (
+          <Button page={page} onClick={handlePagination} />
+        )} */}
+
         <ToastContainer
-          // limit={1}
           position="top-right"
           autoClose={5000}
           hideProgressBar={false}
