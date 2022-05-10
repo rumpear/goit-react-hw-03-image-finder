@@ -1,24 +1,7 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import { createPortal } from 'react-dom';
-
 import { ModalWindow, Overlay } from './Modal.styled';
 
-const modalRoot = document.querySelector('#modal-root');
-
-// export class Modal extends PureComponent {
-//   render() {
-//     return (
-//       createPortal(
-//         <Overlay>
-//           <ModalWindow>{this.props.children}</ModalWindow>
-//         </Overlay>,
-//       ),
-//       modalRoot
-//     );
-//   }
-// }
-
-// * class
 export class Modal extends PureComponent {
   componentDidMount() {
     window.addEventListener('keydown', this.handleEscKeydown);
@@ -47,13 +30,8 @@ export class Modal extends PureComponent {
     );
   }
 }
-//* func component
-// export const Modal = ({ image, closeModal }) => {
-//   return (
-//     <Overlay>
-//       <ModalWindow>
-//         <img src={image} alt="" onClick={closeModal} />
-//       </ModalWindow>
-//     </Overlay>
-//   );
-// };
+
+Modal.propTypes = {
+  children: PropTypes.node.isRequired,
+  onCloseModal: PropTypes.func.isRequired,
+};

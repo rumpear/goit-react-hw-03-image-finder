@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -7,9 +7,11 @@ import { Searchbar } from './Searchbar';
 import { ImageGallery } from './ImageGallery';
 import { Button } from './Button';
 import { Loader } from './Loader';
+import { ErrorMessage } from './ErrorMessage';
+
 import { Wrapper } from './App.styled';
 
-export class App extends PureComponent {
+export class App extends Component {
   state = {
     searchQuery: '',
     totalNumberOfPhotos: 0,
@@ -20,11 +22,16 @@ export class App extends PureComponent {
   };
 
   handleSearch = value => {
-    this.setState({ searchQuery: value, photoList: [], page: 1 });
+    this.setState({ searchQuery: value });
+    this.resetStates();
   };
 
   handlePagination = page => {
     this.setState({ page });
+  };
+
+  resetStates = () => {
+    this.setState({ photoList: [], page: 1, error: null });
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -54,45 +61,20 @@ export class App extends PureComponent {
 
   render() {
     const { handleSearch, handlePagination } = this;
-    const {
-      searchQuery,
-      photoList,
-      totalNumberOfPhotos,
-      isLoading,
-      error,
-      page,
-    } = this.state;
-
+    const { photoList, totalNumberOfPhotos, isLoading, error, page } =
+      this.state;
     const checkPages = () => {
       const totalPages = Math.floor(totalNumberOfPhotos / 12);
-      return page < totalPages && photoList.length;
+      return page < totalPages && photoList.length >= 12;
     };
-
-    // const totalPages = Math.floor(totalNumberOfPhotos / 12);
-
-    // console.log(error);
-    // console.log('this.page', page);
-    // console.log('totalPages', totalPages);
-    // console.log('page < totalPages', page < totalPages);
-    // console.log('totalNumberOfPhotos', totalNumberOfPhotos);
-    // console.log(searchQuery);
-    // console.log(photoList.length);
 
     return (
       <Wrapper>
         <Searchbar onSubmit={handleSearch} />
-        {error && <h1>Whoops, something went wrong: {error.message}</h1>}
+        {error && <ErrorMessage message={error.message} />}
         {photoList.length > 0 && <ImageGallery photoList={photoList} />}
-
         {isLoading && <Loader />}
-
-        {checkPages() ? (
-          <Button page={page} onClick={handlePagination} />
-        ) : null}
-
-        {/* {page < totalPages && photoList.length >= 12 && (
-          <Button page={page} onClick={handlePagination} />
-        )} */}
+        {checkPages() && <Button page={page} onClick={handlePagination} />}
 
         <ToastContainer
           position="top-right"

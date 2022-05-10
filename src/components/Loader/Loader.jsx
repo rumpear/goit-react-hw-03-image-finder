@@ -6,7 +6,7 @@ export const Loader = () => (
     css={`
       display: block;
       margin: 0 auto;
-      border-color: red;
+      border-color: #0099ff;
     `}
   />
 );

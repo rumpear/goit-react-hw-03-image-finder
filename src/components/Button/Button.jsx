@@ -1,12 +1,11 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
 import { LoadMoreBtn } from './Button.styled';
 
 export class Button extends PureComponent {
-  state = { page: 2 };
   incrementPage = () => {
-    this.setState(({ page }) => ({ page: page + 1 }));
-    this.props.onClick(this.state.page);
+    const { page, onClick } = this.props;
+    onClick(page + 1);
   };
 
   render() {
@@ -18,8 +17,7 @@ export class Button extends PureComponent {
   }
 }
 
-// export const Button = ({ photoList, page }) => {
-//   this.setState(({ page }) => ({ page: page + 1 }));
-//   console.log('Button', page);
-//   return <button type="button">Load more</button>;
-// };
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+};

@@ -1,6 +1,8 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { RiSearch2Line } from 'react-icons/ri';
+
 import { Wrapper, Form, Button, Label, Input } from './Searchbar.styled';
 
 export class Searchbar extends PureComponent {
@@ -33,6 +35,7 @@ export class Searchbar extends PureComponent {
       <Wrapper>
         <Form onSubmit={handleSubmit}>
           <Button type="submit">
+            <RiSearch2Line size={25} />
             <Label>Search</Label>
           </Button>
 
