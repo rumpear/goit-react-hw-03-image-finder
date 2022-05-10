@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { createPortal } from 'react-dom';
 import { ModalWindow, Overlay } from './Modal.styled';
+
+const modalRoot = document.querySelector('#modal-root');
 
 export class Modal extends PureComponent {
   componentDidMount() {
@@ -23,10 +26,11 @@ export class Modal extends PureComponent {
     const { children } = this.props;
     const { handleOverlayClick } = this;
 
-    return (
+    return createPortal(
       <Overlay onClick={handleOverlayClick}>
         <ModalWindow>{children}</ModalWindow>
-      </Overlay>
+      </Overlay>,
+      modalRoot,
     );
   }
 }
