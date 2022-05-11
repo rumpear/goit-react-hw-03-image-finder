@@ -20,11 +20,6 @@ export class Searchbar extends PureComponent {
     if (!this.state.input) toast.warn('Search field must not be empty');
 
     this.props.onSubmit(this.state.input.trim());
-    this.resetFrom();
-  };
-
-  resetFrom = () => {
-    this.setState({ input: '' });
   };
 
   render() {

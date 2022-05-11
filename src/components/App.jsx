@@ -26,13 +26,17 @@ export class App extends Component {
     this.resetStates();
   };
 
-  handlePagination = page => {
-    this.setState({ page });
+  handlePagination = () => {
+    this.setState(({ page }) => ({ page: page + 1 }));
   };
 
   resetStates = () => {
     this.setState({ photoList: [], page: 1, error: null });
   };
+
+  async componentDidMount() {
+    this.setState({ searchQuery: 'nature' });
+  }
 
   async componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
@@ -47,8 +51,17 @@ export class App extends Component {
         if (hits.length === 0)
           toast.warn(`We didn't find any photos matching your request`);
 
+        const photos = hits.map(({ id, webformatURL, largeImageURL, tags }) => {
+          return {
+            id,
+            webformatURL,
+            largeImageURL,
+            tags,
+          };
+        });
+
         this.setState(({ photoList }) => ({
-          photoList: [...photoList, ...hits],
+          photoList: [...photoList, ...photos],
           totalNumberOfPhotos: totalHits,
         }));
       } catch (error) {
@@ -74,7 +87,7 @@ export class App extends Component {
         {error && <ErrorMessage message={error.message} />}
         {photoList.length > 0 && <ImageGallery photoList={photoList} />}
         {isLoading && <Loader />}
-        {checkPages() && <Button page={page} onClick={handlePagination} />}
+        {checkPages() && <Button onClick={handlePagination} />}
 
         <ToastContainer
           position="top-right"
