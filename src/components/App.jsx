@@ -34,11 +34,11 @@ export class App extends Component {
     this.setState({ photoList: [], page: 1, error: null });
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.setState({ searchQuery: 'nature' });
   }
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(_, prevState) {
     const { searchQuery, page } = this.state;
 
     if (!searchQuery) return;
@@ -48,8 +48,13 @@ export class App extends Component {
         this.setState({ isLoading: true });
         const { totalHits, hits } = await fetchImages(searchQuery, page);
 
-        if (hits.length === 0)
+        if (hits.length === 0) {
           toast.warn(`We didn't find any photos matching your request`);
+          return;
+        }
+
+        if (page === 1 && searchQuery !== 'nature')
+          toast.success(`We found ${totalHits} images`);
 
         const photos = hits.map(({ id, webformatURL, largeImageURL, tags }) => {
           return {
@@ -76,6 +81,7 @@ export class App extends Component {
     const { handleSearch, handlePagination } = this;
     const { photoList, totalNumberOfPhotos, isLoading, error, page } =
       this.state;
+
     const checkPages = () => {
       const totalPages = Math.floor(totalNumberOfPhotos / 12);
       return page < totalPages && photoList.length >= 12;
@@ -83,11 +89,13 @@ export class App extends Component {
 
     return (
       <Wrapper>
-        <Searchbar onSubmit={handleSearch} />
+        <Searchbar onSubmit={handleSearch} isSearch={isLoading} />
         {error && <ErrorMessage message={error.message} />}
         {photoList.length > 0 && <ImageGallery photoList={photoList} />}
         {isLoading && <Loader />}
-        {checkPages() && <Button onClick={handlePagination} />}
+        {checkPages() && (
+          <Button isLoading={isLoading} onClick={handlePagination} />
+        )}
 
         <ToastContainer
           position="top-right"

@@ -25,11 +25,12 @@ export class Searchbar extends PureComponent {
   render() {
     const { handleInput, handleSubmit } = this;
     const { input } = this.state;
+    const { isSearch } = this.props;
 
     return (
       <Wrapper>
         <Form onSubmit={handleSubmit}>
-          <Button type="submit">
+          <Button type="submit" disabled={isSearch}>
             <RiSearch2Line size={25} />
             <Label>Search</Label>
           </Button>
@@ -50,4 +51,5 @@ export class Searchbar extends PureComponent {
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  isSearch: PropTypes.bool.isRequired,
 };
